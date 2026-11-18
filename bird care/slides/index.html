@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>新手養鳥必懂：小型鸚鵡照護與行為解碼</title>
+  <style>
+    :root {
+      --bg-cream: #FFFDF8;
+      --text-main: #2D3748;
+      --text-muted: #5A677D;
+      --pink-bg: #FFEBF0;
+      --pink-border: #F472B6;
+      --yellow-bg: #FEF7DC;
+      --yellow-border: #F59E0B;
+      --mint-bg: #E6F8F0;
+      --mint-border: #10B981;
+      --blue-bg: #EBF5FF;
+      --blue-border: #3B82F6;
+      --purple-bg: #F3E8FF;
+      --purple-border: #8B5CF6;
+      --danger-bg: #FEE2E2;
+      --danger-border: #EF4444;
+      --shadow-soft: 0 10px 30px rgba(45, 55, 72, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(135deg, #FFF7EB 0%, #EFF6FF 100%);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 頂部進度條 */
+    .progress-wrap {
+      width: 100%;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.06);
+      flex-shrink: 0;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #F472B6, #F59E0B, #10B981, #3B82F6);
+      transition: width 0.35s ease;
+    }
+
+    /* 主舞台（滿版緊湊設計） */
+    .stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+      overflow-y: auto;
+    }
+
+    .slide {
+      display: none;
+      width: 96vw;
+      max-width: 1420px;
+      min-height: 82vh;
+      background: var(--bg-cream);
+      border-radius: 26px;
+      padding: 26px 36px 22px;
+      box-shadow: var(--shadow-soft);
+      border: 2px solid #EFE9DC;
+      flex-direction: column;
+      justify-content: space-between;
+      animation: fadeIn 0.28s ease;
+    }
+    .slide.active { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 頁首區塊 */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px dashed #E6DEC8;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      gap: 16px;
+    }
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      padding: 4px 13px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+    .b-pink { background: var(--pink-bg); color: #BE185D; }
+    .b-mint { background: var(--mint-bg); color: #047857; }
+    .b-blue { background: var(--blue-bg); color: #1D4ED8; }
+    .b-yellow { background: var(--yellow-bg); color: #B45309; }
+    .b-purple { background: var(--purple-bg); color: #6D28D9; }
+
+    h1 { font-size: 2.55rem; color: #1E293B; line-height: 1.25; }
+    h2 { font-size: 1.82rem; color: #1E293B; line-height: 1.3; }
+
+    /* 圓形鸚鵡頭貼 */
+    .avatar-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 3px solid #FDE68A;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .avatar-circle img {
+      width: 88%;
+      height: 88%;
+      object-fit: contain;
+    }
+
+    /* 網格佈局 */
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; }
+    .grid-equal-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    /* 卡片樣式 */
+    .card {
+      border-radius: 20px;
+      padding: 18px 22px;
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+    }
+    .card-pink { background: var(--pink-bg); border-color: #FBCFE8; }
+    .card-yellow { background: var(--yellow-bg); border-color: #FDE68A; }
+    .card-mint { background: var(--mint-bg); border-color: #A7F3D0; }
+    .card-blue { background: var(--blue-bg); border-color: #BFDBFE; }
+    .card-purple { background: var(--purple-bg); border-color: #DDD6FE; }
+    .card-danger { background: var(--danger-bg); border: 2px solid #FCA5A5; }
+
+    .top-mint { border-top: 5px solid var(--mint-border); }
+    .top-blue { border-top: 5px solid var(--blue-border); }
+    .top-yellow { border-top: 5px solid var(--yellow-border); }
+    .top-pink { border-top: 5px solid var(--pink-border); }
+
+    .card h3 {
+      font-size: 1.18rem;
+      margin-bottom: 10px;
+      color: #1E293B;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card p { font-size: 1rem; line-height: 1.6; color: #334155; }
+
+    ul.list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+    ul.list li::before {
+      content: "✦ ";
+      color: #F59E0B;
+      font-weight: 900;
+    }
+
+    /* 表格樣式 */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #FFFFFF;
+      border-radius: 14px;
+      overflow: hidden;
+      font-size: 0.96rem;
+    }
+    th, td {
+      padding: 11px 12px;
+      text-align: center;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    th { background: #F8FAFC; font-weight: 800; color: #1E293B; }
+    tr:last-child td { border-bottom: none; }
+
+    /* 飲食比例條 */
+    .ratio-bar {
+      display: flex;
+      height: 32px;
+      border-radius: 16px;
+      overflow: hidden;
+      font-weight: 800;
+      font-size: 0.88rem;
+      color: #fff;
+      margin: 12px 0;
+    }
+    .ratio-bar div { display: flex; align-items: center; justify-content: center; }
+
+    /* 底部低調質感 Wiki 出處標籤 */
+    .wiki-footer {
+      margin-top: 14px;
+      background: #F3EDE2;
+      color: #64748B;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      opacity: 0.78;
+      align-self: flex-start;
+    }
+
+    /* 封面專屬排版 */
+    .cover-wrap {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 10px 0;
+    }
+    .cover-avatars {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+    .cover-avatars .avatar-circle {
+      width: 86px;
+      height: 86px;
+      border-width: 4px;
+    }
+
+    /* 底部控制列 */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 28px;
+      background: rgba(255, 255, 255, 0.9);
+      border-top: 1px solid #E6DEC8;
+      flex-shrink: 0;
+    }
+    .btn-row { display: flex; gap: 10px; align-items: center; }
+    button {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 1.5px solid #CBD5E1;
+      background: #FFFDF8;
+      color: #1E293B;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    button:hover { background: #FEF3C7; border-color: #F59E0B; }
+    button.primary { background: #475569; color: #FFFFFF; border-color: #475569; }
+    button.primary:hover { background: #334155; }
+
+    /* 總覽模式彈窗 */
+    .grid-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 41, 59, 0.92);
+      z-index: 1000;
+      padding: 36px;
+      overflow-y: auto;
+    }
+    .grid-modal.open { display: block; }
+    .grid-cards {
+      max-width: 1120px;
+      margin: 22px auto 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .grid-item {
+      background: #FFFDF8;
+      padding: 18px;
+      border-radius: 16px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .grid-item:hover { border-color: #F59E0B; transform: translateY(-3px); }
+  </style>
+</head>
+<body>
+
+  <div class="progress-wrap">
+    <div class="progress-fill" id="progressBar"></div>
+  </div>
+
+  <div class="stage">
+
+    <!-- 第 1 頁：封面導覽（虎皮、玄鳳、小太陽、牡丹四大主角排排站） -->
+    <section class="slide active">
+      <div class="slide-body cover-wrap">
+        <div class="cover-avatars">
+          <div class="avatar-circle"><img src="../assets/虎皮.png" alt="虎皮鸚鵡"></div>
+          <div class="avatar-circle"><img src="../assets/玄鳳.png" alt="玄鳳鸚鵡"></div>
+          <div class="avatar-circle"><img src="../assets/小太陽.png" alt="小太陽鸚鵡"></div>
+          <div class="avatar-circle"><img src="../assets/牡丹.png" alt="牡丹鸚鵡"></div>
+        </div>
+        <h1>🦜 新手養鳥必懂：小型鸚鵡照護與行為解碼</h1>
+        <p style="font-size:1.15rem; color:var(--text-muted);">結合 Bird Care LLM Wiki 知識庫，為您打造 10 頁全面、科學且溫馨的新手完整照護指南。</p>
+        <div class="badge-row" style="justify-content:center; margin-top:4px;">
+          <span class="badge b-blue">📖 10 大主題完整導覽</span>
+          <span class="badge b-mint">🛡️ 安全與醫療警示</span>
+          <span class="badge b-pink">💗 信任與行為解碼</span>
+        </div>
+
+        <div class="grid-3" style="width:100%; text-align:left; margin-top:12px;">
+          <div class="card card-yellow">
+            <h3>🌱 單元一：品種與環境（P2–P5）</h3>
+            <p>評估四大常見小型鸚鵡性格、噪音與壽命，打造符合空間與安全標準的居家鳥窩。</p>
+          </div>
+          <div class="card card-mint">
+            <h3>🥗 單元二：飲食與毒物（P6–P7）</h3>
+            <p>建立滋養丸與新鮮蔬果黃金比例，避開酪梨、巧克力與鐵氟龍不沾鍋等致命風險。</p>
+          </div>
+          <div class="card card-purple">
+            <h3>💬 單元三：行為與急救（P8–P10）</h3>
+            <p>解讀肢體與羽冠情緒訊號、實踐零壓力親訓，並掌握五大生病警訊與緊急保溫處置。</p>
+          </div>
+        </div>
+      </div>
+      <div class="wiki-footer">[[wiki/index.md]] | [[sources/來源-常見家養鸚鵡品種比較.md]]</div>
+    </section>
+
+    <!-- 第 2 頁：常見小型鸚鵡品種五大指標比較（和尚登場） -->
+    <section class="slide">
+      <div class="slide-header">
+        <div>
+          <div class="badge-row"><span class="badge b-blue">Part 01 · 品種認識</span><span class="badge b-yellow">五大指標量化對比</span></div>
+          <h2>2. 常見小型鸚鵡五大飼養指標比較</h2>
+        </div>
+        <div class="avatar-circle"><img src="../assets/和尚.png" alt="和尚鸚鵡"></div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card">
+            <h3>📊 品種特性綜合評比表（滿分 5 星）</h3>
+            <table>
+              <thead>
+                <tr><th>品種</th><th>平均壽命</th><th>噪音指數</th><th>學語能力</th><th>親人互動</th><th>推薦對象</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>虎皮鸚鵡</strong></td><td>5–10 年</td><td>⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐</td><td><span class="badge b-mint">首購族 / 公寓</span></td></tr>
+                <tr><td><strong>玄鳳鸚鵡</strong></td><td>15–20 年</td><td>⭐⭐⭐</td><td>⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td><span class="badge b-mint">愛討摸 / 溫馴派</span></td></tr>
+                <tr><td><strong>和尚鸚鵡</strong></td><td>15–20+ 年</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td><span class="badge b-yellow">互動教學派</span></td></tr>
+                <tr><td><strong>小太陽錐尾</strong></td><td>20–25 年</td><td>⭐⭐⭐</td><td>⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td><span class="badge b-blue">愛躺手 / 黏人派</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div class="card card-yellow">
+              <h3>⏳ 飼養前的「時間承諾」評估</h3>
+              <p>小型鸚鵡壽命普遍長達 <strong>15～25 年</strong>，相當於陪伴孩子從小學一路長大到大學畢業，飼養前務必確認未來人生規劃能穩定陪伴。</p>
+            </div>
+            <div class="card card-pink">
+              <h3>🔊 公寓隔音與鄰里考量</h3>
+              <p>鳥類清晨與黃昏有自然「晨喚／晚安叫」習性；若居住在隔音較差的集合住宅，建議優先考慮叫聲較輕柔的<strong>虎皮</strong>或<strong>母玄鳳</strong>。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="wiki-footer">[[sources/來源-常見家養鸚鵡品種比較.md]] | [[concepts/新手品種挑選指南.md]]</div>
+    </section>
+
+    <!-- 第 3 頁：新手品種挑選決策指南（太平洋登場） -->
+    <section class="slide">
+      <div class="slide-header">
+        <div>
+          <div class="badge-row"><span class="badge b-yellow">Part 01 · 品種認識</span><span class="badge b-pink">性格與體質細節</span></div>
+          <h2>3. 依生活型態挑選你的命定鳥寶</h2>
+        </div>
+        <div class="avatar-circle"><img src="../assets/太平洋.png" alt="太平洋鸚鵡"></div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-4">
+          <div class="card top-mint">
+            <h3>💚 虎皮鸚鵡</h3>
+            <ul class="list">
+              <li>體型小巧、飼料與籠具開銷最親民。</li>
+              <li>公鳥節奏感強，能學會數十個單字與短句。</li>
+              <li>活潑好奇，適合喜歡觀察鳥寶玩耍的新手。</li>
+            </ul>
+          </div>
+          <div class="card top-yellow">
+            <h3>💛 玄鳳鸚鵡</h3>
+            <ul class="list">
+              <li>頭頂有可愛羽冠，性格溫順極少用力咬人。</li>
+              <li><strong>注意羽粉</strong>：過敏體質者需常清空氣清淨機。</li>
+              <li><strong>夜驚體質</strong>：夜間建議留一盞微弱小夜燈。</li>
+            </ul>
+          </div>
+          <div class="card top-blue">
+            <h3>💙 小太陽鸚鵡</h3>
+            <ul class="list">
+              <li>愛翻肚躺手心、喜歡鑽衣服，互動感極強。</li>
+              <li>幾乎無羽粉，但換牙／發情期較愛輕咬探索。</li>
+              <li>需大量啃咬玩具滿足精力。</li>
+            </ul>
+          </div>
+          <div class="card top-pink">
+            <h3>💗 牡丹／太平洋</h3>
+            <ul class="list">
+              <li>體型迷你但個性獨立、領域意識較明顯。</li>
+              <li>合籠容易打架，建議一鳥一籠或從小配對。</li>
+              <li>適合有耐心建立界線的飼主。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="wiki-footer">[[sources/來源-常見家養鸚鵡品種比較.md]] | [[concepts/新手品種挑選指南.md]]</div>
+    </section>
+
+    <!-- 第 4 頁：每日飲食黃金比例與安全蔬果（金太陽登場） -->
+    <section class="slide">
+      <div class="slide-header">
+        <div>
+          <div class="badge-row"><span class="badge b-mint">Part 02 · 營養與安全</span><span class="badge b-blue">科學餵食比例</span></div>
+          <h2>4. 每日飲食黃金比例與安全蔬果</h2>
+        </div>
+        <div class="avatar-circle"><img src="../assets/金太陽.png" alt="金太陽鸚鵡"></div>
+      </div>
+      <div class="slide-body">
+        <div class="ratio-bar">
+          <div style="width:65%; background:#10B981;">優質滋養丸 60–70%</div>
+          <div style="width:25%; background:#3B82F6;">新鮮蔬果 20–30%</div>
+          <div style="width:10%; background:#F59E0B;">種子點心 10%以內</div>
+        </div>
+        <div class="grid-3">
+          <div class="card top-mint">
+            <h3>🥣 1. 優質滋養丸（60-70%）</h3>
+            <p>主食核心。提供完整均衡的維生素、礦物質與胺基酸，避免長期純吃瓜子種子造成脂肪肝與營養失衡。</p>
+          </div>
+          <div class="card top-blue">
+            <h3>🥦 2. 新鮮蔬果（20-30%）</h3>
+            <p>首選深綠色蔬菜（小松菜、地瓜葉、青江菜、花椰菜）與橘黃色蔬菜（南瓜、紅蘿蔔）。水果糖分高僅需少量點綴。</p>
+          </div>
+          <div class="card top-yellow">
+            <h3>🌾 3. 種子與點心（10%以內）</h3>
+            <p>作為親訓獎勵、目標訓練與天冷時的熱量補充。切忌整碗裝滿任食，以免養成嚴重挑食習慣。</p>
+          </div>
+        </div>
+        <div class="card card-blue">
+          <h3>💡 挑食鳥的「1–3 個月漸進式換食法」</h3>
+          <p>若鳥寶習慣吃種子不吃滋養丸，<strong>切勿直接斷食！</strong>應採取「早晚定時撒碎滋養丸在種子上」、「模仿人類津津有味吃給牠看」或泡軟混入蔬果泥，逐步引導轉換，並每日定時量體重監測健康。</p>
+        </div>
+      </div>
+      <div class="wiki-footer">[[concepts/鸚鵡安全飲食與禁忌.md]] | [[sources/來源-鸚鵡飲食與禁忌.md]]</div>
+    </section>
+
+    <!-- 第 5 頁：致命食物清單與誤食緊急處置（牡丹登場） -->
+    <section class="slide">
+      <div class="slide-header">
+        <div>
+          <div class="badge-row"><span class="badge b-pink">Part 02 · 營養與安全</span><span class="badge b-yellow">餐桌紅線警訊</span></div>
+          <h2>5. 絕對禁止！致命食物清單與誤食處置</h2>
+        </div>
+        <div class="avatar-circle"><img src="../assets/牡丹.png" alt="牡丹鸚鵡"></div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card card-danger">
+            <h3 style="color:#B91C1C;">☠️ 餐桌五大致命毒物（一口都不可試）</h3>
+            <ul class="list">
+              <li><strong>酪梨（Avocado）</strong>：含 Persin 毒素，會引發急性心肺衰竭與呼吸困難。</li>
+              <li><strong>巧克力、咖啡、茶類</strong>：可可鹼與咖啡因會導致心律不整、抽搐甚至猝死。</li>
+              <li><strong>洋蔥、大蒜、韭菜、蔥</strong>：含硫化物會破壞紅血球，造成嚴重溶血性貧血。</li>
+              <li><strong>蘋果籽／櫻桃核／水蜜桃核</strong>：果核含微量氰化物，餵食水果前務必徹底去核去籽。</li>
+              <li><strong>人類重口味加工食品</strong>：高油、高鹽、高糖與酒精會直接造成腎衰竭與中毒。</li>
+            </ul>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div class="card" style="border-left:5px solid var(--danger-border);">
+              <h3>⚠️ 誤食中毒的緊急處置</h3>
+              <p>若發現鳥寶誤食上述禁忌物，<strong>切勿自行催吐或亂餵偏方</strong>！應立即將剩餘食物與包裝收好保留以供獸醫參考，將鳥放入溫暖安靜之外出籠，並火速送往鳥類專科醫院。</p>
+            </div>
+            <div class="card card-mint">
+              <h3>💧 飲水衛生與細菌防治</h3>
+              <p>鳥類常將食物浸泡水碗中，溫水極易滋生細菌。請<strong>每日早晚更換新鮮飲水</strong>並刷洗水碗內壁，避免黴菌與大腸桿菌感染。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="wiki-footer">[[concepts/鸚鵡安全飲食與禁忌.md]] | [[sources/來源-鸚鵡飲食與禁忌.md]]</div>
+    </section>
+
+    <!-- 第 6 頁：鳥籠配置與居家空間規劃（白藍虎皮登場） -->
+    <section class="slide">
+      <div class="slide-header">
+        <div>
+          <div class="badge-row"><span class="badge b-blue">Part 03 · 居住環境</span><span class="badge b-mint">鳥籠配置學</span></div>
+          <h2>6. 打造安全鳥窩：鳥籠挑選與擺放原則</h2>
+        </div>
+        <div class="avatar-circle"><img src="../assets/白藍虎皮.png" alt="白藍虎皮鸚鵡"></div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card card-blue">
+            <h3>📏 空間與欄杆間距</h3>
+            <ul class="list">
+              <li><strong>橫向寬度優先</strong>：寬度大於高度，方便鳥寶左右跳躍與展翅伸展。</li>
+              <li><strong>安全欄杆間距</strong>：小型鸚鵡應選 <strong>1.0–1.5 cm</strong> 以內，防止好奇鑽頭卡住窒息。</li>
+              <li><strong>材質首選</strong>：白鐵不鏽鋼或無毒烤漆，避免生鏽與含鉛鋅金屬。</li>
+            </ul>
+          </div>
+          <div class="card card-yellow">
+            <h3>🪵 棲木與玩具配置</h3>
+            <ul class="list">
+              <li><strong>多樣化天然棲木</strong>：搭配不同粗細的蘋果木、花椒木與磨爪棒，保護足底肌腱。</li>
+              <li><strong>淘汰全塑膠光棒</strong>：單一粗細光滑棲木易引發足底炎與指甲過長。</li>
+              <li><strong>動線留白</strong>：玩具掛在角落，不擋住振翅空間與食水碗上方（防糞便掉落）。</li>
+            </ul>
+          </div>
+          <div class="card card-mint">
+            <h3>🧭 黃金擺放位置</h3>
+            <ul class="list">
+              <li><strong>背靠實牆角落</strong>：給予後方安全感，避免四面懸空造成長期焦慮。</li>
+              <li><strong>視線平行高度</strong>：籠頂約在飼主胸口到眼睛高度，建立平等信任感。</li>
+              <li><strong>遠離風口與油煙</strong>：避開冷氣直吹、窗邊烈日曝曬與廚房通道。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="wiki-footer">[[concepts/居家安全與籠具配置.md]] | [[sources/來源-居家環境與安全防護.md]]</div>
+    </section>
+
+    <!-- 第 7 頁：居家隱形殺手與放飛前檢查（玄鳳登場） -->
+    <section class="slide">
+      <div class="slide-header">
+        <div>
+          <div class="badge-row"><span class="badge b-pink">Part 03 · 居住環境</span><span class="badge b-yellow">放飛安全檢查表</span></div>
+          <h2>7. 居家隱形殺手與每日放飛前檢查</h2>
+        </div>
+        <div class="avatar-circle"><img src="../assets/玄鳳.png" alt="玄鳳鸚鵡"></div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-equal-2">
+          <div class="card card-danger">
+            <h3 style="color:#B91C1C;">💨 呼吸道頭號殺手：鐵氟龍與化學揮發物</h3>
+            <ul class="list">
+              <li><strong>鐵氟龍（PTFE）不沾鍋</strong>：高溫乾燒時釋放無色無味毒氣，鳥類氣囊極度敏感，可在<strong>數分鐘內引發肺水腫猝死</strong>！烹飪時務必開抽油煙機並將鳥移至遠處通風房。</li>
+              <li><strong>香氛與清潔劑</strong>：精油擴香、香氛蠟燭、殺蟲劑、漂白水、蚊香與香水皆會嚴重灼傷呼吸道。</li>
+            </ul>
+          </div>
+          <div class="card card-yellow">
+            <h3>✅ 每日開籠放飛前 5 項必查清單</h3>
+            <ul class="list">
+              <li><strong>1. 門窗與紗窗鎖緊</strong>：拉上窗簾或貼防撞貼紙，避免受驚高速撞擊透明玻璃。</li>
+              <li><strong>2. 關閉所有電風扇</strong>：吊扇與立扇在放飛期間必須完全停止轉動。</li>
+              <li><strong>3. 蓋上馬桶蓋與水桶</strong>：防止好奇降落滑入深水溺水。</li>
+              <li><strong>4. 收起熱湯與熱飲</strong>：避免鳥寶飛落餐桌燙傷腳掌與羽毛。</li>
+              <li><strong>5. 收納電線與有毒植物</strong>：遠離黃金葛、百合、萬年青等常見室內毒草。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="wiki-footer">[[concepts/居家安全與籠具配置.md]] | [[sources/來源-居家環境與安全防護.md]]</div>
+    </section>
+
+    <!-- 第 8 頁：肢體語言與情緒解碼圖鑑（小太陽登場） -->
+    <section class="slide">
+      <div class="slide-header">
+        <div>
+          <div class="badge-row"><span class="badge b-purple">Part 04 · 行為與照護</span><span class="badge b-pink">讀懂鳥語翻譯機</span></div>
+          <h2>8. 讀懂鸚鵡心聲：肢體語言與情緒解碼</h2>
+        </div>
+        <div class="avatar-circle"><img src="../assets/小太陽.png" alt="小太陽鸚鵡"></div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card card-mint">
+            <h3>😊 放鬆與信任（綠燈）</h3>
+            <ul class="list">
+              <li><strong>磨喙（嘎吱聲）</strong>：睡前上下喙輕磨發出沙沙聲，代表極度安心滿足。</li>
+              <li><strong>單腳站立／理毛</strong>：身體健康、對周遭環境完全卸下防備。</li>
+              <li><strong>蓬鬆抖羽</strong>：釋放壓力、調整羽毛排列的放鬆表現。</li>
+              <li><strong>低頭頂手／反芻</strong>：把你視為最親密的伴侶與家人。</li>
+            </ul>
+          </div>
+          <div class="card card-yellow">
+            <h3>👀 好奇與警戒（黃燈）</h3>
+            <ul class="list">
+              <li><strong>瞳孔快速放大縮小（Eye Pinning）</strong>：代表極度興奮、專注或情緒高漲（下一步可能開心或咬人）。</li>
+              <li><strong>羽冠直立（玄鳳）</strong>：聽見新聲音、處於警覺或好奇探索狀態。</li>
+              <li><strong>單眼歪頭凝視</strong>：正在仔細觀察頭頂或遠處的物體。</li>
+            </ul>
+          </div>
+          <div class="card card-pink">
+            <h3>💢 恐懼與防禦（紅燈）</h3>
+            <ul class="list">
+              <li><strong>羽毛緊貼身體、身體壓低</strong>：高度緊張害怕，隨時準備起飛逃跑。</li>
+              <li><strong>張嘴哈氣／低頭衝刺</strong>：明確警告「不要靠近我的領域」，此時強伸手必被咬。</li>
+              <li><strong>張翅喘氣</strong>：可能處於過熱中暑或極度驚嚇狀態。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="wiki-footer">[[concepts/鸚鵡肢體語言與行為解讀.md]] | [[sources/來源-鸚鵡行為與肢體語言.md]]</div>
+    </section>
+
+    <!-- 第 9 頁：零壓力親訓與日常護理（月輪登場） -->
+    <section class="slide">
+      <div class="slide-header">
+        <div>
+          <div class="badge-row"><span class="badge b-blue">Part 04 · 行為與照護</span><span class="badge b-mint">日常互動實務</span></div>
+          <h2>9. 零壓力親訓步驟與日常洗澡睡眠護理</h2>
+        </div>
+        <div class="avatar-circle"><img src="../assets/月輪.png" alt="月輪鸚鵡"></div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-equal-2">
+          <div class="card card-blue">
+            <h3>🤝 正向增強親訓 4 階段</h3>
+            <ul class="list">
+              <li><strong>Step 1 靜靜陪伴（第 1 週）</strong>：剛到新家不急著抓，在籠旁輕聲說話建立安全感。</li>
+              <li><strong>Step 2 隔籠餵食獎勵</strong>：手持長條<strong>小米穗</strong>從籠外餵食，讓手與「好事」連結。</li>
+              <li><strong>Step 3 響片／口令上手（Step-up）</strong>：用點心引導鳥寶主動踏上你的手指，<strong>絕不從背後強抓</strong>。</li>
+              <li><strong>Step 4 環境豐富化</strong>：每天提供啃咬紙捲、藏食玩具消耗精力，預防無聊拔毛。</li>
+            </ul>
+          </div>
+          <div class="card card-purple">
+            <h3>🛁 洗澡、換羽與睡眠黃金標準</h3>
+            <ul class="list">
+              <li><strong>每日 10–12 小時黑暗睡眠</strong>：晚上定時蓋上透氣深色籠布，睡眠不足會導致暴躁與異常發情。</li>
+              <li><strong>每週 1–3 次水浴清潔</strong>：提供淺水盆讓鳥寶自行戲水，或使用細霧噴瓶由上往下噴灑（避免強風吹乾著涼）。</li>
+              <li><strong>換羽期營養與護管</strong>：換羽時需補充優質蛋白質與鈣質；未開花的白色「羽管」內含血管，<strong>切勿硬捏或強剝</strong>。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="wiki-footer">[[concepts/鸚鵡親訓與信任建立.md]] | [[sources/來源-日常護理與環境豐富化.md]]</div>
+    </section>
+
+    <!-- 第 10 頁：五大生病警訊與緊急保溫處置（灰鸚鵡登場） -->
+    <section class="slide">
+      <div class="slide-header">
+        <div>
+          <div class="badge-row"><span class="badge b-pink">Part 05 · 健康守護</span><span class="badge b-yellow">黃金救援指南</span></div>
+          <h2>10. 鳥類很會忍痛！五大異常徵兆必須立刻就醫</h2>
+        </div>
+        <div class="avatar-circle"><img src="../assets/灰鸚鵡.png" alt="灰鸚鵡"></div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card card-danger">
+            <h3 style="color:#B91C1C;">🚨 看到這些症狀，請立即聯絡「特寵／非犬貓獸醫」</h3>
+            <ul class="list">
+              <li><strong>1. 白天炸毛嗜睡</strong>：長時間縮在籠底或棲木上閉眼發抖（鳥類隱藏病痛到極限的求救訊號）。</li>
+              <li><strong>2. 呼吸異常</strong>：張口喘氣、呼吸有咔咔雜音、<strong>尾巴隨呼吸明顯上下擺動（Tail Bobbing）</strong>。</li>
+              <li><strong>3. 排泄物異常</strong>：水便不成形、深綠色膽汁便、出現血便或整天幾乎無排便。</li>
+              <li><strong>4. 食慾與體重驟降</strong>：24 小時內拒食，或胸前龍骨摸起來變尖銳消瘦。</li>
+              <li><strong>5. 五官異常分泌物</strong>：鼻孔堵塞流液、眼睛紅腫流淚、頻繁甩頭嘔吐黏液。</li>
+            </ul>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div class="card card-yellow">
+              <h3>🌡️ 就醫前的緊急保溫處置</h3>
+              <ul class="list">
+                <li><strong>核心原則：保溫＋安靜</strong>（生病鳥隻極易失溫休克）。</li>
+                <li>移入小型外出箱，使用<strong>陶瓷保溫燈或暖暖包（隔毛巾）</strong>維持環境在 <strong>28–30°C</strong>（預留散熱角落）。</li>
+                <li>降低棲木高度防跌落，並拍下<strong>最新糞便照片</strong>帶給獸醫判讀。</li>
+              </ul>
+            </div>
+            <div class="card card-mint">
+              <h3>🏥 給新手的最後叮嚀</h3>
+              <p>平時健康時就先查好住家附近的<strong>「特寵／鳥類專科醫院」</strong>地址與急診電話，並準備好外出籠與電子體重計，關鍵時刻才能守護毛孩一輩子的健康！</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="wiki-footer">[[concepts/鸚鵡生病徵兆與緊急就醫.md]] | [[sources/來源-常見疾病與急救處理.md]]</div>
+    </section>
+
+  </div>
+
+  <!-- 底部控制列 -->
+  <footer class="controls">
+    <div class="btn-row">
+      <button onclick="changeSlide(-1)">⬅ 上一頁</button>
+      <button class="primary" onclick="changeSlide(1)">下一頁 ➡</button>
+    </div>
+    <div style="font-size:0.86rem; color:var(--text-muted); font-weight:600;">
+      🦜 小型鸚鵡照護 LLM Wiki 教學簡報 · 支援鍵盤 ← → 換頁
+    </div>
+    <div class="btn-row">
+      <button onclick="toggleGrid()">⊞ 總覽 (G)</button>
+      <button onclick="toggleFull()">⛶ 全螢幕 (F)</button>
+      <span id="pageText" style="font-weight:800; min-width:58px; text-align:right;">1 / 10</span>
+    </div>
+  </footer>
+
+  <!-- 10 頁網格總覽模式 (按 G 鍵開啟) -->
+  <div class="grid-modal" id="gridModal" onclick="toggleGrid()">
+    <div style="max-width:1120px; margin:0 auto; display:flex; justify-content:space-between; align-items:center;">
+      <div style="color:#FFFFFF; font-size:1.45rem; font-weight:800;">📑 投影片總覽（點擊卡片快速跳頁）</div>
+      <button onclick="toggleGrid()" style="background:#FFFFFF; border:none; font-weight:800;">✕ 關閉</button>
+    </div>
+    <div class="grid-cards" id="gridCards"></div>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progressBar = document.getElementById('progressBar');
+    const pageText = document.getElementById('pageText');
+    const gridModal = document.getElementById('gridModal');
+    const gridCards = document.getElementById('gridCards');
+    let current = 0;
+
+    function updateView() {
+      slides.forEach((s, i) => s.classList.toggle('active', i === current));
+      progressBar.style.width = ((current + 1) / slides.length) * 100 + '%';
+      pageText.textContent = `${current + 1} / ${slides.length}`;
+    }
+
+    function changeSlide(dir) {
+      current = (current + dir + slides.length) % slides.length;
+      updateView();
+    }
+
+    function toggleFull() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    function toggleGrid() {
+      const isOpen = gridModal.classList.toggle('open');
+      if (isOpen) {
+        gridCards.innerHTML = '';
+        slides.forEach((sl, idx) => {
+          const titleEl = sl.querySelector('h1, h2');
+          const title = titleEl ? titleEl.textContent.replace(/\s+/g, ' ').trim() : `第 ${idx + 1} 頁`;
+          const card = document.createElement('div');
+          card.className = 'grid-item';
+          card.innerHTML = `
+            <div style="font-size:0.8rem; font-weight:800; color:#EC4899; margin-bottom:6px;">PAGE ${String(idx + 1).padStart(2, '0')}</div>
+            <div style="font-weight:700; font-size:0.96rem; line-height:1.45; color:#1E293B;">${title}</div>
+          `;
+          card.onclick = (e) => {
+            e.stopPropagation();
+            current = idx;
+            updateView();
+            gridModal.classList.remove('open');
+          };
+          gridCards.appendChild(card);
+        });
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
+      if (e.key === 'ArrowLeft') changeSlide(-1);
+      if (e.key.toLowerCase() === 'g') toggleGrid();
+      if (e.key.toLowerCase() === 'f') toggleFull();
+    });
+
+    updateView();
+  </script>
+</body>
+</html>
